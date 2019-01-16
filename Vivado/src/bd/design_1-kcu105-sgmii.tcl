@@ -127,6 +127,10 @@ apply_bd_automation -rule xilinx.com:bd_rule:board -config { Board_Interface {ph
 
 # Add the AXI DMA
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma axi_ethernet_0_dma
+set_property -dict [list CONFIG.c_sg_length_width {16} \
+CONFIG.c_include_mm2s_dre {1} \
+CONFIG.c_sg_use_stsapp_length {1} \
+CONFIG.c_include_s2mm_dre {1}] [get_bd_cells axi_ethernet_0_dma]
 
 # DMA Connections
 connect_bd_intf_net [get_bd_intf_pins axi_ethernet_0_dma/M_AXIS_MM2S] [get_bd_intf_pins axi_ethernet_0/s_axis_txd]
@@ -155,6 +159,10 @@ connect_bd_net [get_bd_pins axi_ethernet_0_dma/s2mm_introut] [get_bd_pins microb
 
 # No I/O (internal only)
 set_property -dict [list CONFIG.Include_IO {false}] [get_bd_cells axi_ethernet_0]
+
+# AXI Ethernet signal_detect tied HIGH
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant const_signal_detect
+connect_bd_net [get_bd_pins const_signal_detect/dout] [get_bd_pins axi_ethernet_0/signal_detect]
 
 # Automation: AXI-Streaming interfaces
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out1 (125 MHz)" }  [get_bd_pins axi_ethernet_0/axis_clk]
