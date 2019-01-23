@@ -160,9 +160,9 @@ connect_bd_net [get_bd_pins axi_ethernet_0_dma/s2mm_introut] [get_bd_pins microb
 # No I/O (internal only)
 set_property -dict [list CONFIG.Include_IO {false}] [get_bd_cells axi_ethernet_0]
 
-# AXI Ethernet signal_detect tied HIGH
+# PCS/PMA SGMII signal_detect tied HIGH
 create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant const_signal_detect
-connect_bd_net [get_bd_pins const_signal_detect/dout] [get_bd_pins axi_ethernet_0/signal_detect]
+connect_bd_net [get_bd_pins const_signal_detect/dout] [get_bd_pins gig_ethernet_pcs_pma_0/signal_detect]
 
 # Automation: AXI-Streaming interfaces
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out1 (125 MHz)" }  [get_bd_pins axi_ethernet_0/axis_clk]
